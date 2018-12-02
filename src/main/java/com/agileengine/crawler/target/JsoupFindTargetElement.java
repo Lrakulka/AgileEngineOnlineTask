@@ -4,11 +4,15 @@ import com.agileengine.crawler.reader.ReaderController;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 public class JsoupFindTargetElement {
     public static final int USER_VIZUAL_ATTRIBUTE_POINT = 2;
@@ -35,7 +39,9 @@ public class JsoupFindTargetElement {
 
     private static Optional<Element> getMostSimilar(final Element originElement, final Elements elements,
             final Integer threshold) {
-        final Element sourceElementChild = originElement.children().size() > 0 ? originElement.child(0) : null;
+        final Node sourceElementChild = originElement.childNodes().size() > 0
+                ? originElement.childNodes().get(0)
+                : null;
         final List<Attribute> originElementAttrs = originElement.attributes().asList();
         final Optional<Element> targetElement = elements.stream()
                 .max(Comparator.comparingInt(element -> countSameAtr(element, originElementAttrs, sourceElementChild)));
@@ -47,14 +53,14 @@ public class JsoupFindTargetElement {
     }
 
     private static int countSameAtr(final Element targetElement, final List<Attribute> elementAttrs,
-            final Element sourceElementChild) {
+            final Node sourceElementChild) {
         int prevSize = elementAttrs.size();
         List<Attribute> originAttrs = new ArrayList<>(elementAttrs);
         List<Attribute> targetAttrs = targetElement.attributes().asList();
         if (targetAttrs.contains(new Attribute("onclick", "javascript:window.close(); return false;"))) {
             return 0;
         }
-        if (targetElement.children().size() > 0 && targetElement.child(0).equals(sourceElementChild)) {
+        if (targetElement.childNodes().size() > 0 && targetElement.childNodes().get(0).hasSameValue(sourceElementChild)) {
             prevSize += USER_VIZUAL_ATTRIBUTE_POINT;
         }
         originAttrs.removeAll(targetAttrs);
