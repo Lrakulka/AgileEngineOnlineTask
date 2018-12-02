@@ -3,14 +3,10 @@ package com.agileengine;
 import com.agileengine.crawler.origin.JsoupFindOriginElement;
 import com.agileengine.crawler.target.JsoupFindTargetElement;
 import org.jsoup.nodes.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 public class FindElementOnPage {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FindElementOnPage.class);
-
     private static final String DEFAULT_ORIGIN_ELEMENT_ID = "make-everything-ok-button";
     private static final Integer DEFAULT_THRESHOLD = 1;
     private static final int ERROR_CODE = 1;
